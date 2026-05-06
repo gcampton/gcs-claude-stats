@@ -3,7 +3,7 @@
 A two-line statusline for [Claude Code](https://claude.com/claude-code) that shows model, project, context usage, 5-hour and 7-day quotas, and session duration — all counting in the same direction so you can read it at a glance.
 
 ```
-◆ Opus 4.7 │ Skill_Seekers/development
+◆ Opus 4.7 │ gcs-claude-stats/Development
 ▱▱▱▱▱ 0% │ 5h: 22% (3h) │ 7d: 39% (5d) │ ⏱ 2h44m
 ```
 
