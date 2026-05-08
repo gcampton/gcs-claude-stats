@@ -3,7 +3,7 @@
 Claude Code statusline with 5h/7d quota tracking.
 
 Shows: model, context gauge, tokens, git branch, 5h used%, 7d used%,
-pace indicator, and reset countdown.
+pace indicator, and elapsed time within each window.
 
 Designed for Claude Code on Windows, macOS, and Linux. Caches API responses to
 the system temp directory for 5 minutes.
@@ -156,16 +156,16 @@ def format_duration(ms):
     return f"{ms // 1000}s"
 
 
-def format_reset(minutes):
-    """Format reset countdown."""
-    if minutes is None:
+def format_elapsed(remain_min, window_min):
+    """Format elapsed time since window started (counts up)."""
+    if remain_min is None:
         return ""
-    m = int(minutes)
-    if m >= 1440:
-        return f" {D}({m // 1440}d){N}"
-    if m >= 60:
-        return f" {D}({m // 60}h){N}"
-    return f" {D}({m}m){N}"
+    elapsed = max(0, window_min - int(remain_min))
+    if elapsed >= 1440:
+        return f" {D}({elapsed // 1440}d){N}"
+    if elapsed >= 60:
+        return f" {D}({elapsed // 60}h){N}"
+    return f" {D}({elapsed}m){N}"
 
 
 def used_pct_str(used_pct):
@@ -398,8 +398,8 @@ if usage:
 
     pace5 = pace_indicator(u5, r5, 300) if SHOW_PACE else ""
     pace7 = pace_indicator(u7, r7, 10080) if SHOW_PACE else ""
-    reset5 = format_reset(r5) if SHOW_RESET else ""
-    reset7 = format_reset(r7) if SHOW_RESET else ""  # CUSTOM: removed >=70% guard, always show reset
+    reset5 = format_elapsed(r5, 300) if SHOW_RESET else ""
+    reset7 = format_elapsed(r7, 10080) if SHOW_RESET else ""  # CUSTOM: counts up; always shown
 
     line2_parts.append(f"5h: {used_pct_str(u5)}{pace5}{reset5}")
     line2_parts.append(f"7d: {used_pct_str(u7)}{pace7}{reset7}")

@@ -13,11 +13,11 @@ A two-line statusline for [Claude Code](https://claude.com/claude-code) that sho
 
 **Line 2:**
 - `▰▰▱▱▱ 40%` — context window **used** (bar fills as you consume)
-- `5h: 22% (3h)` — 5-hour rolling quota used, with time until reset
-- `7d: 39% (5d)` — 7-day rolling quota used, with time until reset
+- `5h: 22% (3h)` — 5-hour rolling quota used, with time elapsed in the current window
+- `7d: 39% (5d)` — 7-day rolling quota used, with time elapsed in the current window
 - `⏱ 2h44m` — current Claude Code session duration
 
-All three percentages count **up** as you use them. The countdown (`(3h)`, `(5d)`) is time-until-reset.
+Everything counts **up** — percentages and the `(3h)` / `(5d)` elapsed timers all increase together, so you can read the line at a glance without flipping directions in your head.
 
 ## Install
 
@@ -52,7 +52,7 @@ Toggle features via environment variables. Set them in your shell profile or in 
 | `CQB_CONTEXT_SIZE` | `0` | Show `of 200K` next to the context % |
 | `CQB_TOKENS` | `1` | Show `↑in ↓out` token counts |
 | `CQB_PACE` | `0` | Show pace indicator (you're ahead/behind expected usage) |
-| `CQB_RESET` | `1` | Show reset countdowns `(3h)` `(5d)` |
+| `CQB_RESET` | `1` | Show elapsed-window timers `(3h)` `(5d)` |
 | `CQB_DURATION` | `1` | Show session duration `⏱ 2h44m` |
 | `CQB_COST` | `0` | Show session cost in USD |
 | `CQB_BRANCH` | `1` | Show git branch on line 1 |
@@ -71,7 +71,7 @@ This is a fork of [aiedwardyi/claude-usage-monitor](https://github.com/aiedwardy
 
 1. **Context bar fills as USED, not remaining.** Upstream shows `▰▰▰▰▰ 100%` for an empty context (full bar = lots of room left). This fork shows `▱▱▱▱▱ 0%` for an empty context (empty bar = nothing used). Now all three percentages on the line count in the same direction.
 
-2. **7-day reset countdown always shown.** Upstream hides the `(Xd)` reset for 7d unless you're past 70% used. This fork always shows it, so you don't wonder whether the missing time means "you're fine" or "I don't know."
+2. **Window timers count up, not down, and the 7-day timer is always shown.** Upstream displays `(Xh)` / `(Xd)` as time-until-reset (counting down) and hides the 7-day one unless you're past 70% used. This fork shows time elapsed within the current window (counting up, same direction as the percentages) and always shows the 7-day timer, so you don't wonder whether the missing value means "you're fine" or "I don't know."
 
 3. **Session duration prefixed with `⏱`.** Upstream renders the duration as a bare value at the end of line 2 (e.g. `2h44m`), which is easy to misread as the 7-day reset time. The clock glyph makes it visually distinct.
 
